@@ -1,0 +1,11 @@
+[default]
+region = us-east-1
+output=json
+
+[profile nojoytoday]
+region=us-east-1
+output=json
+
+[profile asec]
+output = json
+region = us-east-1
