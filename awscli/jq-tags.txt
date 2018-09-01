@@ -1,0 +1,26 @@
+https://gist.github.com/carlessanagustin/7e18e272aafdd454e5b8091ae4f61099
+
+(https://github.com/mwilliamson/jq.py)
+aws ec2 describe-instances | jq '.Reservations[].Instances[] | select(.KeyName == "MyKey") | select(.State.Code != 48) | select(.Tags[]|select(.Key=="Name")|select(.Value=="InstanceName")) | [ .PublicIpAddress]'
+ 
+aws ec2 describe-instances | jq '.Reservations[].Instances[] | select(.KeyName == "MyKey") | select(.State.Code != 48) | select(.Tags[]|select(.Key=="Name")|select(.Value=="InstanceName")) | [ .PublicIpAddress, (.Tags[]|select(.Key=="Name").Value)]'
+
+aws ec2 describe-instances | jq '.Reservations[].Instances[] | select(.KeyName == "MyKey") | select(.State.Code != 48) | select(.Tags[]|select(.Key=="InventoryGroup").Value) | [ .PublicIpAddress, (.Tags[]|select(.Key=="Name").Value)]'
+
+aws ec2 describe-instances | jq '.Reservations[].Instances[] | select(.LaunchTime > "2015-01-28") | select(.State.Code != 48) | [.LaunchTime, .State.Name, (.Tags[]|select(.Key=="Name")|.Value)]'
+
+aws ec2 describe-instances | jq '.Reservations[].Instances[] | select(.KeyName == "MyKey") | { KeyName, PublicIpAddress}'
+
+(http://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html)
+#To describe all instances with the key-name type MyKey
+aws ec2 describe-instances --output json --filters "Name=key-name,Values=MyKey"
+
+#To describe all instances with a Owner tag
+aws ec2 describe-instances --filters "Name=tag-key,Values=Owner"
+
+#To describe all instances with a Purpose=test tag
+aws ec2 describe-instances --filters "Name=tag:Purpose,Values=test"
+
+#To describe all EC2 instances that have an instance type of m1.small or m1.medium that are also in the us-west-2c Availability Zone
+
+aws ec2 describe-instances --filters "Name=instance-type,Values=m1.small,m1.medium" "Name=availability-zone,Values=us-west-2c"

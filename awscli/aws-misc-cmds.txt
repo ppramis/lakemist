@@ -1,0 +1,18 @@
+#########
+#
+# Miscellaneous AWS CLI commands
+#
+#########
+#
+aws ec2 describe-instances --query "Reservations[*].Instances[*].{ID:InstanceId,AZ:Placement.AvailabilityZone,IAID:IamInstanceProfile.Id,IDARN:IamInstanceProfile.Arn,TK:Tags[0].Key,TV:Tags[0].Value}" --output table
+TK:Tags.Key,TV:Tags.*]
+#
+aws ec2 describe-vpcs --query Vpcs[*].[VpcId,CidrBlock,Tags[0].Key,Tags[0].Value] --output table
+#
+aws ec2 describe-instances --query 'Reservations[*].InstanceId' --filter \
+  "Name=instance-state-code,Values=16" --output text
+#
+aws cloudwatch describe-alarms --region us-east-1 --profile ppramis-cloudnetic --state-value INSUFFICIENT_DATA --query "MetricAlarms[].[Namespace,AlarmDescription,StateReason]" --output text
+#
+aws cloudwatch describe-alarms --region us-east-1 --profile ppramis-cloudnetic --state-value INSUFFICIENT_DATA | jq '.["MetricAlarms"][] | select(.Namespace | contains("CloudTrail")) |  {Alarm: .AlarmDescription, StateReason: .StateReason}'  
+
